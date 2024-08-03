@@ -76,15 +76,18 @@ export function RestaurantProvider({ children }: RestaurantProviderProps) {
       isFetchingRef.current = true;
       setIsSpinning(true);
 
+      const apiUrl = process.env.EXPO_PUBLIC_API_URL;
+
+      if (!apiUrl) {
+        console.error(`Missing API URL env variable`);
+        return;
+      }
+
       try {
-        const response = await axios.get(
-          "http://192.168.1.13:3000/restaurants",
-          // "https://maps-enhanced-api.onrender.com/restaurants",
-          {
-            params: paramsToFetch,
-            timeout: 5000,
-          },
-        );
+        const response = await axios.get(`${apiUrl}/restaurants`, {
+          params: paramsToFetch,
+          timeout: 5000,
+        });
         setRestaurants(response.data);
       } catch (error) {
         console.error("Error fetching restaurants:", error);

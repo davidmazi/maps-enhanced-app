@@ -35,8 +35,14 @@ export default function ServerStatus() {
 
   const checkServerStatus = useCallback(async () => {
     setIsChecking(true);
+    const apiUrl = process.env.EXPO_PUBLIC_API_URL;
+
+    if (!apiUrl) {
+      console.error("Missing API URL env variable");
+      return;
+    }
     try {
-      await axios.get("https://maps-enhanced-api.onrender.com", {
+      await axios.get(`${apiUrl}/restaurants`, {
         timeout: 10000,
       });
       setServerOnline(true);

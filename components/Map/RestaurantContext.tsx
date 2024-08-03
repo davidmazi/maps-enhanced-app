@@ -9,6 +9,7 @@ import React, {
   useRef,
   useState,
 } from "react";
+import { UserLocation } from "../Index/UserLocationContext";
 
 export type Restaurant = {
   name: string;
@@ -25,7 +26,7 @@ interface RestaurantContextType {
   setCurrentRestaurant: React.Dispatch<React.SetStateAction<Restaurant | null>>;
   restaurants: Restaurant[];
   setRestaurants: React.Dispatch<React.SetStateAction<Restaurant[]>>;
-  fetchRestaurants: () => void;
+  fetchRestaurants: (latitude: string, longitude: string) => void;
   isSpinning: boolean;
 }
 
@@ -44,6 +45,7 @@ export function RestaurantProvider({ children }: RestaurantProviderProps) {
   const [restaurants, setRestaurants] = useState<Restaurant[]>([]);
   const [isSpinning, setIsSpinning] = useState(false);
   const [shouldFetch, setShouldFetch] = useState(false);
+  const [paramsToFetch, setParamsToFetch] = useState<Partial<UserLocation>>({});
 
   const isFetchingRef = useRef(false);
 
@@ -57,9 +59,13 @@ export function RestaurantProvider({ children }: RestaurantProviderProps) {
       setCurrentRestaurant(restaurants[0]);
   }, [restaurants, currentRestaurant]);
 
-  const fetchRestaurants = useCallback(() => {
-    setShouldFetch(true);
-  }, []);
+  const fetchRestaurants = useCallback(
+    (latitude: string, longitude: string) => {
+      setShouldFetch(true);
+      setParamsToFetch({ latitude: +latitude, longitude: +longitude });
+    },
+    [],
+  );
 
   useEffect(() => {
     const fetchData = async () => {
@@ -72,9 +78,10 @@ export function RestaurantProvider({ children }: RestaurantProviderProps) {
 
       try {
         const response = await axios.get(
-          //   "http://192.168.1.13:3000/restaurants",
-          "https://maps-enhanced-api.onrender.com/restaurants",
+          "http://192.168.1.13:3000/restaurants",
+          // "https://maps-enhanced-api.onrender.com/restaurants",
           {
+            params: paramsToFetch,
             timeout: 5000,
           },
         );

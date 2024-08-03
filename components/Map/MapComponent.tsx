@@ -1,38 +1,26 @@
-import * as Location from "expo-location";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import MapView, { Marker } from "react-native-maps";
-import { StatusBar } from "expo-status-bar";
+import { useLocalSearchParams } from "expo-router";
 import Loader from "../Loader";
 import RestaurantSwiper from "../Swiper/RestaurantSwiper";
 import RefreshButton from "./RefreshButton";
 import { RestaurantProvider, useRestaurantContext } from "./RestaurantContext";
-
-type UserLocation = {
-  latitude: number;
-  longitude: number;
-};
+import { useUserLocationContext } from "../Index/UserLocationContext";
+import MapButtons from "../common/MapButtons";
+import CenterUserLocation from "../common/CenterUserLocation";
 
 type MapSettings = {
   mapType: "standard" | "satelliteFlyover";
-  showsBuildings: boolean;
 };
 
 const styles = StyleSheet.create({
   mapContainer: {
     height: "100%",
-    backgroundColor: "plum",
   },
   map: {
     width: "100%",
-    // height: "100%",
-  },
-  buttonsContainer: {
-    position: "absolute",
-    top: 10,
-    right: 10,
-    flexDirection: "column",
-    alignItems: "center",
+    height: "100%",
   },
   mapTypeButton: {
     width: 40,
@@ -47,9 +35,11 @@ const styles = StyleSheet.create({
   floatingButton: {
     backgroundColor: "rgba(255, 255, 255, 0.8)",
     borderRadius: 30,
-    width: 50,
-    height: 50,
+    width: 40,
+    height: 40,
     justifyContent: "center",
+    marginBottom: 10,
+
     alignItems: "center",
   },
   disabledButton: {
@@ -58,60 +48,51 @@ const styles = StyleSheet.create({
 });
 
 function MapComponentInner() {
+  const { latitude, longitude } = useLocalSearchParams();
+
   const { restaurants, currentRestaurant, fetchRestaurants, isSpinning } =
     useRestaurantContext();
-  const [userLocation, setUserLocation] = useState<UserLocation>();
+  const { userLocation } = useUserLocationContext();
+
   const mapRef = useRef<MapView>(null);
 
   const [mapSettings, setMapSettings] = useState<MapSettings>({
     mapType: "satelliteFlyover",
-    showsBuildings: true,
   });
   const toggleMapSetting = () => {
     setMapSettings((prevSettings) => ({
       mapType:
         prevSettings.mapType === "standard" ? "satelliteFlyover" : "standard",
-      showsBuildings: prevSettings.mapType === "standard",
     }));
   };
 
+  const refreshRestaurants = useCallback(() => {
+    fetchRestaurants(latitude as string, longitude as string);
+  }, [fetchRestaurants, latitude, longitude]);
+
   useEffect(() => {
-    fetchRestaurants();
-
-    (async () => {
-      const { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== "granted") {
-        console.error("Permission to access location was denied");
-        return;
-      }
-
-      const location = await Location.getCurrentPositionAsync({});
-      setUserLocation({
-        latitude: location.coords.latitude,
-        longitude: location.coords.longitude,
-      });
-    })();
-  }, [fetchRestaurants]);
+    refreshRestaurants();
+  }, []);
 
   useEffect(() => {
     if (currentRestaurant && mapRef.current) {
       mapRef.current.animateCamera(
         {
           center: {
-            latitude: currentRestaurant.latitude - 0.0005,
+            latitude: currentRestaurant.latitude - 0.0009,
             longitude: currentRestaurant.longitude,
           },
           ...(mapSettings.mapType === "satelliteFlyover" && {
-            heading: 0,
+            heading: 2.1, // Minimum heading required to trigger compass (to avoid overlap of MapButtons)
             pitch: 50,
             zoom: 17,
             altitude: 300,
           }),
           ...(mapSettings.mapType === "standard" && {
-            heading: 0,
+            heading: 2.1, // Minimum heading required to trigger compass (to avoid overlap of MapButtons)
             pitch: 0,
             zoom: 17,
-            altitude: 750,
+            altitude: 1500,
           }),
         },
         { duration: 1000 },
@@ -120,25 +101,18 @@ function MapComponentInner() {
   }, [currentRestaurant, mapSettings.mapType]);
 
   return restaurants.length === 0 ? (
-    <Loader />
+    <Loader size="large" />
   ) : (
     <View style={styles.mapContainer}>
-      <StatusBar translucent />
       {currentRestaurant && (
         <MapView
           style={styles.map}
           mapType={mapSettings.mapType}
           showsBuildings={false}
           ref={mapRef}
+          showsCompass
+          showsUserLocation
         >
-          {userLocation && (
-            <Marker
-              pinColor="darkgreen"
-              coordinate={userLocation}
-              title="You are here"
-              description="Your current location"
-            />
-          )}
           {restaurants.map((restaurant, index) => (
             <Marker
               pinColor={
@@ -155,7 +129,7 @@ function MapComponentInner() {
           ))}
         </MapView>
       )}
-      <View style={styles.buttonsContainer}>
+      <MapButtons variant="right">
         <TouchableOpacity
           style={styles.mapTypeButton}
           onPress={toggleMapSetting}
@@ -165,11 +139,16 @@ function MapComponentInner() {
           </Text>
         </TouchableOpacity>
         <RefreshButton
-          onPress={fetchRestaurants}
+          onPress={refreshRestaurants}
           isSpinning={isSpinning}
           styles={styles}
         />
-      </View>
+        <CenterUserLocation
+          userLocation={userLocation}
+          mapRef={mapRef}
+          addOffset
+        />
+      </MapButtons>
     </View>
   );
 }

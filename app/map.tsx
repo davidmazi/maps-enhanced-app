@@ -1,6 +1,6 @@
-import InitialLocationMap from "@/components/Index/InitialLocationMap";
 import React from "react";
 import { StyleSheet, View } from "react-native";
+import MapComponent from "@/components/Map/MapComponent";
 
 const styles = StyleSheet.create({
   container: {
@@ -8,10 +8,10 @@ const styles = StyleSheet.create({
   },
 });
 
-export default function Index() {
+export default function Map() {
   return (
     <View style={styles.container}>
-      <InitialLocationMap />
+      <MapComponent />
     </View>
   );
 }

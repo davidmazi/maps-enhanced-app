@@ -1,5 +1,11 @@
 import React from "react";
-import { View, ActivityIndicator, StyleSheet } from "react-native";
+import {
+  View,
+  ActivityIndicator,
+  StyleSheet,
+  ColorValue,
+  ActivityIndicatorProps,
+} from "react-native";
 
 const styles = StyleSheet.create({
   container: {
@@ -11,14 +17,18 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: "rgba(255, 255, 255, 0.7)",
   },
 });
 
-function Loader() {
+interface Props {
+  size: ActivityIndicatorProps["size"];
+  color?: ColorValue;
+}
+
+function Loader({ size, color = "#0000ff" }: Props): React.ReactElement {
   return (
     <View style={styles.container}>
-      <ActivityIndicator size="large" color="#0000ff" />
+      <ActivityIndicator size={size} color={color} />
     </View>
   );
 }

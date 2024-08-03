@@ -1,12 +1,12 @@
 import React, { useRef, useState } from "react";
-import { StyleSheet, TouchableOpacity, View, Text } from "react-native";
+import { StyleSheet, View } from "react-native";
 import MapView, { Region } from "react-native-maps";
 import { useRouter } from "expo-router";
-import { Ionicons } from "@expo/vector-icons";
 import { useUserLocationContext } from "./UserLocationContext";
 import MapButtons from "../common/MapButtons";
 import CenterUserLocation from "../common/CenterUserLocation";
 import CenteredMarker from "../common/CenteredMarker";
+import SearchNearPinButton from "../navigation/SearchNearPinButton";
 
 const styles = StyleSheet.create({
   container: {
@@ -16,23 +16,6 @@ const styles = StyleSheet.create({
   map: {
     width: "100%",
     height: "100%",
-  },
-  validateButton: {
-    position: "absolute",
-    bottom: 25,
-    paddingVertical: 10,
-    paddingHorizontal: 15,
-    borderRadius: 25,
-    alignSelf: "center",
-    backgroundColor: "rgba(0, 122, 255, 0.8)",
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  buttonText: {
-    color: "white",
-    fontSize: 16,
-    marginRight: 8,
   },
 });
 
@@ -87,10 +70,7 @@ function InitialLocationMap() {
       <MapButtons variant="right">
         <CenterUserLocation userLocation={userLocation} mapRef={mapRef} />
       </MapButtons>
-      <TouchableOpacity style={styles.validateButton} onPress={navigateToMap}>
-        <Text style={styles.buttonText}>Search Near Pin</Text>
-        <Ionicons name="arrow-forward-circle-outline" size={24} color="white" />
-      </TouchableOpacity>
+      <SearchNearPinButton onPress={navigateToMap} />
     </View>
   );
 }

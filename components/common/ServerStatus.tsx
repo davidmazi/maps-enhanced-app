@@ -1,11 +1,10 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
-
-import axios from "axios";
 import { Ionicons } from "@expo/vector-icons";
 
 import Loader from "@/components/Loader";
 import MapButtons from "./MapButtons";
+import { useServerStatus } from "./ServerStatusContext";
 
 // Styles
 const styles = StyleSheet.create({
@@ -30,35 +29,7 @@ const styles = StyleSheet.create({
 
 // ServerStatus Component
 export default function ServerStatus() {
-  const [serverOnline, setServerOnline] = useState<boolean>();
-  const [isChecking, setIsChecking] = useState(false);
-
-  const checkServerStatus = useCallback(async () => {
-    setIsChecking(true);
-    const apiUrl = process.env.EXPO_PUBLIC_API_URL;
-
-    if (!apiUrl) {
-      console.error("Missing API URL env variable");
-      return;
-    }
-    try {
-      await axios.get(`${apiUrl}/restaurants`, {
-        timeout: 10000,
-      });
-      setServerOnline(true);
-    } catch (error) {
-      if (axios.isAxiosError(error)) {
-        if (error.code === "ERR_BAD_REQUEST") setServerOnline(true);
-        else setServerOnline(false);
-      }
-    } finally {
-      setIsChecking(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    checkServerStatus();
-  }, [checkServerStatus]);
+  const { serverOnline, isChecking, checkServerStatus } = useServerStatus();
 
   const getStatusColor = () => (serverOnline ? "green" : "red");
 

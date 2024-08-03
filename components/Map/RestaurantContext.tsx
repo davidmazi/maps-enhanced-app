@@ -99,7 +99,7 @@ export function RestaurantProvider({ children }: RestaurantProviderProps) {
     };
 
     fetchData();
-  }, [shouldFetch]);
+  }, [paramsToFetch, shouldFetch]);
 
   const contextValue = useMemo(
     () => ({

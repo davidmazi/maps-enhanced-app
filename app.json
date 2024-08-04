@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "maps-enhanced",
-    "slug": "maps-enhanced",
+    "name": "Maps Matcher",
+    "slug": "maps-matcher",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon_ios_x2.png",

@@ -43,8 +43,8 @@ export function RestaurantProvider({ children }: RestaurantProviderProps) {
     null,
   );
   const [restaurants, setRestaurants] = useState<Restaurant[]>([]);
-  const [isSpinning, setIsSpinning] = useState(false);
-  const [shouldFetch, setShouldFetch] = useState(false);
+  const [isSpinning, setIsSpinning] = useState<boolean>(false);
+  const [shouldFetch, setShouldFetch] = useState<boolean>(false);
   const [paramsToFetch, setParamsToFetch] = useState<Partial<UserLocation>>({});
 
   const isFetchingRef = useRef(false);

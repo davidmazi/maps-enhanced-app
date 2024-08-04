@@ -1,8 +1,10 @@
-import { AirbnbRating, Card } from "@rneui/themed";
+import { Card } from "@rneui/themed";
 import React, { useEffect, useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { Alert, StyleSheet, Text, View } from "react-native";
 import Swiper from "react-native-deck-swiper";
+import openMap from "react-native-open-maps";
 import { Restaurant, useRestaurantContext } from "../Map/RestaurantContext";
+import FlameRating from "../common/FlameRating";
 
 export type SwipeDirection = "left" | "right";
 
@@ -35,8 +37,34 @@ function RestaurantSwiper() {
       switch (direction) {
         case "right":
           if (currentRestaurant) {
-            setRestaurants([currentRestaurant]);
+            setRestaurants([restaurant]);
             setCurrentRestaurant(restaurant);
+
+            const isLongName = currentRestaurant.name.length > 50;
+
+            const title = isLongName
+              ? "Take me there!"
+              : currentRestaurant.name;
+            const message = isLongName
+              ? currentRestaurant.name
+              : "Take me there!";
+
+            Alert.alert(title, message, [
+              {
+                text: "Cancel",
+                onPress: () => console.log("Cancel Pressed"),
+                style: "cancel",
+              },
+              {
+                text: "OK",
+                onPress: () =>
+                  openMap({
+                    latitude: restaurant.latitude,
+                    longitude: restaurant.longitude,
+                    query: restaurant.name,
+                  }),
+              },
+            ]);
           }
           break;
         case "left":
@@ -76,12 +104,7 @@ function RestaurantSwiper() {
           renderCard={(restaurant: Restaurant) => (
             <Card containerStyle={{ borderRadius: 25 }}>
               <Card.Title>{restaurant.name}</Card.Title>
-              <AirbnbRating
-                isDisabled
-                showRating={false}
-                size={15}
-                defaultRating={restaurant.rating ?? 0.5}
-              />
+              <FlameRating rating={restaurant.rating ?? 0.5} />
               <Card.Divider />
               <Text>{restaurant.type}</Text>
               <Card.Image

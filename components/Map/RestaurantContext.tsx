@@ -9,6 +9,8 @@ import React, {
   useRef,
   useState,
 } from "react";
+
+import { useRouter } from "expo-router";
 import { UserLocation } from "../Index/UserLocationContext";
 
 export type Restaurant = {
@@ -48,6 +50,7 @@ export function RestaurantProvider({ children }: RestaurantProviderProps) {
   const [paramsToFetch, setParamsToFetch] = useState<Partial<UserLocation>>({});
 
   const isFetchingRef = useRef(false);
+  const router = useRouter();
 
   useEffect(() => {
     if (
@@ -67,6 +70,47 @@ export function RestaurantProvider({ children }: RestaurantProviderProps) {
     [],
   );
 
+  const fetchRestaurantsData = useCallback(
+    async (params: Partial<UserLocation>, retryCount = 0) => {
+      // const apiUrl = process.env.EXPO_PUBLIC_API_URL;
+      const apiUrl = "http://192.168.1.13:3000";
+
+      if (!apiUrl) {
+        console.error(`Missing API URL env variable`);
+        return [];
+      }
+
+      try {
+        console.debug(
+          "🚀\x1b[35m ~ file: RestaurantContext.tsx ~ fetchRestaurantsData ~ params\x1b[0m",
+          params,
+        );
+        const response = await axios.get(`${apiUrl}/restaurants`, {
+          params,
+          timeout: 5000,
+        });
+
+        if (response.data.length === 0 && retryCount === 0) {
+          console.debug("Empty response, retrying...");
+          return await fetchRestaurantsData(params, 1);
+        }
+        if (response.data.length === 0 && retryCount > 0) {
+          router.navigate("/");
+          return [];
+        }
+        return response.data;
+      } catch (error) {
+        console.error("Error fetching restaurants:", error);
+        if (retryCount === 0) {
+          return fetchRestaurantsData(params, 1);
+        }
+        router.navigate("/");
+        return [];
+      }
+    },
+    [router],
+  );
+
   useEffect(() => {
     const fetchData = async () => {
       if (isFetchingRef.current || !shouldFetch) {
@@ -76,21 +120,11 @@ export function RestaurantProvider({ children }: RestaurantProviderProps) {
       isFetchingRef.current = true;
       setIsSpinning(true);
 
-      const apiUrl = process.env.EXPO_PUBLIC_API_URL;
-
-      if (!apiUrl) {
-        console.error(`Missing API URL env variable`);
-        return;
-      }
-
       try {
-        const response = await axios.get(`${apiUrl}/restaurants`, {
-          params: paramsToFetch,
-          timeout: 5000,
-        });
-        setRestaurants(response.data);
-      } catch (error) {
-        console.error("Error fetching restaurants:", error);
+        const restaurantsData = await fetchRestaurantsData(paramsToFetch);
+        setRestaurants(restaurantsData);
+      } catch (e) {
+        console.error("Error while fetching or setting restaurants", e as any);
       } finally {
         setIsSpinning(false);
         isFetchingRef.current = false;
@@ -99,7 +133,7 @@ export function RestaurantProvider({ children }: RestaurantProviderProps) {
     };
 
     fetchData();
-  }, [paramsToFetch, shouldFetch]);
+  }, [fetchRestaurantsData, paramsToFetch, shouldFetch]);
 
   const contextValue = useMemo(
     () => ({

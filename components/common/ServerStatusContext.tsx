@@ -24,7 +24,8 @@ export function ServerStatusProvider({ children }: React.PropsWithChildren) {
 
   const checkServerStatus = useCallback(async () => {
     setIsChecking(true);
-    const apiUrl = process.env.EXPO_PUBLIC_API_URL;
+    // const apiUrl = process.env.EXPO_PUBLIC_API_URL;
+    const apiUrl = "http://192.168.1.13:3000";
 
     if (!apiUrl) {
       console.error("Missing API URL env variable");

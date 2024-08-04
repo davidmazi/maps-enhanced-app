@@ -44,6 +44,10 @@ export default function CenterUserLocation({
             latitude: userLocation.latitude - (addOffset ? 0.0009 : 0),
             longitude: userLocation.longitude,
           },
+          heading: 2.1,
+          pitch: 1,
+          zoom: 1,
+          altitude: 1500,
         },
         { duration: 1000 },
       );

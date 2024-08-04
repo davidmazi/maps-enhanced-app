@@ -68,7 +68,7 @@ function InitialLocationMap() {
         showsUserLocation
         loadingEnabled
         onRegionChangeComplete={onRegionChangeComplete}
-        camera={{
+        initialCamera={{
           center: centerCoordinates,
           heading: 2.1,
           pitch: 1,

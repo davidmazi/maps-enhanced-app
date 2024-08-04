@@ -33,6 +33,8 @@ export function UserLocationProvider({ children }: UserLocationProviderProps) {
   const [userLocation, setUserLocation] = useState<UserLocation | null>(null);
 
   useEffect(() => {
+    let locationSubscription: Location.LocationSubscription | null = null;
+
     (async () => {
       const { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== "granted") {
@@ -40,12 +42,27 @@ export function UserLocationProvider({ children }: UserLocationProviderProps) {
         return;
       }
 
-      const location = await Location.getCurrentPositionAsync();
-      setUserLocation({
-        latitude: location.coords.latitude,
-        longitude: location.coords.longitude,
-      });
+      locationSubscription = await Location.watchPositionAsync(
+        {
+          accuracy: Location.Accuracy.High,
+          timeInterval: 10000, // Update every 10 seconds
+          distanceInterval: 10, // Or every 10 meters
+        },
+        (location) => {
+          setUserLocation({
+            latitude: location.coords.latitude,
+            longitude: location.coords.longitude,
+          });
+        },
+      );
     })();
+
+    // Cleanup function to remove the subscription when the component unmounts
+    return () => {
+      if (locationSubscription) {
+        locationSubscription.remove();
+      }
+    };
   }, []);
 
   const contextValue = useMemo(

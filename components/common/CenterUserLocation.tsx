@@ -3,7 +3,7 @@ import { StyleSheet, TouchableOpacity, Animated, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import MapView from "react-native-maps";
 
-import { UserLocation } from "@/components/Index/UserLocationContext";
+import { useUserLocationContext } from "@/components/Index/UserLocationContext";
 
 const styles = StyleSheet.create({
   centerButton: {
@@ -25,16 +25,15 @@ const styles = StyleSheet.create({
 });
 
 interface CenterUserLocationProps {
-  userLocation: UserLocation | null;
   mapRef: React.RefObject<MapView>;
   addOffset?: boolean;
 }
 
 export default function CenterUserLocation({
   mapRef,
-  userLocation,
   addOffset,
 }: CenterUserLocationProps) {
+  const { userLocation } = useUserLocationContext();
   const [pulseAnim] = useState(new Animated.Value(0));
 
   const centerToUserLocation = useCallback(() => {

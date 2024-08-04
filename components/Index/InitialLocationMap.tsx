@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import MapView, { Region } from "react-native-maps";
 import { useRouter } from "expo-router";
@@ -20,6 +20,7 @@ const styles = StyleSheet.create({
 });
 
 function InitialLocationMap() {
+  const [isInitialLocationSet, setIsInitialLocationSet] = useState(false);
   const { userLocation } = useUserLocationContext();
   const router = useRouter();
   const mapRef = useRef<MapView>(null);
@@ -38,6 +39,20 @@ function InitialLocationMap() {
     });
   };
 
+  useEffect(() => {
+    if (userLocation && !isInitialLocationSet) {
+      const center = {
+        latitude: userLocation.latitude,
+        longitude: userLocation.longitude,
+      };
+      mapRef.current?.animateCamera({
+        center,
+      });
+      setCenterCoordinates(center);
+      setIsInitialLocationSet(true);
+    }
+  }, [userLocation, isInitialLocationSet]);
+
   const onRegionChangeComplete = (region: Region) => {
     setCenterCoordinates({
       latitude: region.latitude,
@@ -51,15 +66,10 @@ function InitialLocationMap() {
         style={styles.map}
         ref={mapRef}
         showsUserLocation
-        followsUserLocation
-        showsMyLocationButton
         loadingEnabled
         onRegionChangeComplete={onRegionChangeComplete}
         camera={{
-          center: {
-            latitude: 48.8566,
-            longitude: 2.3522, // Paris center default coordinates
-          },
+          center: centerCoordinates,
           heading: 2.1,
           pitch: 1,
           zoom: 1,
@@ -68,7 +78,7 @@ function InitialLocationMap() {
       />
       <CenteredMarker />
       <MapButtons variant="right">
-        <CenterUserLocation userLocation={userLocation} mapRef={mapRef} />
+        <CenterUserLocation mapRef={mapRef} />
       </MapButtons>
       <SearchNearPinButton onPress={navigateToMap} />
     </View>

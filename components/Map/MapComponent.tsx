@@ -6,7 +6,6 @@ import Loader from "../Loader";
 import RestaurantSwiper from "../Swiper/RestaurantSwiper";
 import RefreshButton from "./RefreshButton";
 import { RestaurantProvider, useRestaurantContext } from "./RestaurantContext";
-import { useUserLocationContext } from "../Index/UserLocationContext";
 import MapButtons from "../common/MapButtons";
 import CenterUserLocation from "../common/CenterUserLocation";
 
@@ -52,7 +51,6 @@ function MapComponentInner() {
 
   const { restaurants, currentRestaurant, fetchRestaurants, isSpinning } =
     useRestaurantContext();
-  const { userLocation } = useUserLocationContext();
 
   const mapRef = useRef<MapView>(null);
 
@@ -67,9 +65,7 @@ function MapComponentInner() {
   };
 
   const refreshRestaurants = useCallback(() => {
-    if (!isSpinning) {
-      fetchRestaurants(latitude as string, longitude as string);
-    }
+    fetchRestaurants(latitude as string, longitude as string);
   }, [fetchRestaurants, latitude, longitude]);
 
   useEffect(() => {
@@ -120,6 +116,7 @@ function MapComponentInner() {
               pinColor={
                 currentRestaurant?.name === restaurant.name ? "darkblue" : "red"
               }
+              zIndex={currentRestaurant?.name === restaurant.name ? 100 : 10}
               key={`${restaurant.name}_${index.toString()}`}
               coordinate={{
                 latitude: restaurant.latitude,
@@ -145,11 +142,7 @@ function MapComponentInner() {
           isSpinning={isSpinning}
           styles={styles}
         />
-        <CenterUserLocation
-          userLocation={userLocation}
-          mapRef={mapRef}
-          addOffset
-        />
+        <CenterUserLocation mapRef={mapRef} addOffset />
       </MapButtons>
     </View>
   );

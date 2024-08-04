@@ -70,7 +70,7 @@ function MapComponentInner() {
     if (!isSpinning) {
       fetchRestaurants(latitude as string, longitude as string);
     }
-  }, [fetchRestaurants, isSpinning, latitude, longitude]);
+  }, [fetchRestaurants, latitude, longitude]);
 
   useEffect(() => {
     refreshRestaurants();

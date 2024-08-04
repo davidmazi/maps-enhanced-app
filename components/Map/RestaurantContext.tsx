@@ -72,8 +72,7 @@ export function RestaurantProvider({ children }: RestaurantProviderProps) {
 
   const fetchRestaurantsData = useCallback(
     async (params: Partial<UserLocation>, retryCount = 0) => {
-      // const apiUrl = process.env.EXPO_PUBLIC_API_URL;
-      const apiUrl = "http://192.168.1.13:3000";
+      const apiUrl = process.env.EXPO_PUBLIC_API_URL;
 
       if (!apiUrl) {
         console.error(`Missing API URL env variable`);
@@ -95,6 +94,7 @@ export function RestaurantProvider({ children }: RestaurantProviderProps) {
           return await fetchRestaurantsData(params, 1);
         }
         if (response.data.length === 0 && retryCount > 0) {
+          console.debug("Empty response again, returing home");
           router.navigate("/");
           return [];
         }

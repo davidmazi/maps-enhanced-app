@@ -27,7 +27,6 @@ function GlobalButtons() {
 
   return (
     <MapButtons variant="left">
-      <Text>{pathName}</Text>
       <ServerStatus style={styles.button} />
       <NavigateHomeButton style={styles.button} disabled={pathName === "/"} />
     </MapButtons>

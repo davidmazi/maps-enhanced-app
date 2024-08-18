@@ -1,4 +1,4 @@
-rootProject.name = 'maps-enhanced'
+rootProject.name = 'Maps Matcher'
 
 dependencyResolutionManagement {
   versionCatalogs {

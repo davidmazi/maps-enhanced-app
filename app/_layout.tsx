@@ -2,8 +2,8 @@ import React from "react";
 import { Stack } from "expo-router";
 import { UserLocationProvider } from "@/components/Index/UserLocationContext";
 
-import ServerStatus from "@/components/common/ServerStatus";
 import { ServerStatusProvider } from "@/components/common/ServerStatusContext";
+import GlobalButtons from "@/components/common/globalButtons/GlobalButtons";
 
 export default function RootLayout() {
   return (
@@ -13,7 +13,7 @@ export default function RootLayout() {
           <Stack.Screen name="index" options={{ headerShown: false }} />
           <Stack.Screen name="map" options={{ headerShown: false }} />
         </Stack>
-        <ServerStatus />
+        <GlobalButtons />
       </UserLocationProvider>
     </ServerStatusProvider>
   );

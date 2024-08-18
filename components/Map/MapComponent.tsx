@@ -9,7 +9,6 @@ import { RestaurantProvider, useRestaurantContext } from "./RestaurantContext";
 import { useUserLocationContext } from "../Index/UserLocationContext";
 import MapButtons from "../common/MapButtons";
 import CenterUserLocation from "../common/CenterUserLocation";
-import NavigateHomeButton from "../common/NavigateHomeButton";
 
 type MapSettings = {
   mapType: "standard" | "satelliteFlyover";
@@ -73,7 +72,7 @@ function MapComponentInner() {
 
   useEffect(() => {
     refreshRestaurants();
-  }, []);
+  }, [refreshRestaurants]);
 
   useEffect(() => {
     if (currentRestaurant && mapRef.current) {
@@ -149,7 +148,6 @@ function MapComponentInner() {
           mapRef={mapRef}
           addOffset
         />
-        <NavigateHomeButton style={styles.mapTypeButton} />
       </MapButtons>
     </View>
   );

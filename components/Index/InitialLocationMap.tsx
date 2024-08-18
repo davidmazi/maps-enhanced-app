@@ -29,7 +29,7 @@ function InitialLocationMap() {
   });
 
   const navigateToMap = () => {
-    router.push({
+    router.navigate({
       pathname: "/map",
       params: {
         latitude: centerCoordinates.latitude,

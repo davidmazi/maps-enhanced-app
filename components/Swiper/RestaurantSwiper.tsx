@@ -11,7 +11,7 @@ export type SwipeDirection = "left" | "right";
 const styles = StyleSheet.create({
   container: {
     position: "absolute",
-    marginTop: "75%",
+    marginTop: "80%",
   },
 });
 
@@ -27,8 +27,9 @@ function RestaurantSwiper() {
     index: number;
     direction: SwipeDirection;
   } | null>(null);
-  // Handle Swipe
+  const swiperRef = useRef<Swiper<Restaurant>>(null);
 
+  // Handle Swipe
   useEffect(() => {
     if (swipeAction) {
       const { index, direction } = swipeAction;
@@ -100,6 +101,7 @@ function RestaurantSwiper() {
     restaurants.length > 1 && (
       <View style={styles.container}>
         <Swiper
+          ref={swiperRef}
           cards={restaurants}
           renderCard={(restaurant: Restaurant) => (
             <Card containerStyle={{ borderRadius: 25 }}>

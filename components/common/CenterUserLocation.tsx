@@ -3,7 +3,8 @@ import { StyleSheet, TouchableOpacity, Animated, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import MapView from "react-native-maps";
 
-import { UserLocation } from "@/components/Index/UserLocationContext";
+import { useUserLocationContext } from "@/components/Index/UserLocationContext";
+import AnimatedIconPair from "./AnimatedIconPairs";
 
 const styles = StyleSheet.create({
   centerButton: {
@@ -25,16 +26,15 @@ const styles = StyleSheet.create({
 });
 
 interface CenterUserLocationProps {
-  userLocation: UserLocation | null;
   mapRef: React.RefObject<MapView>;
   addOffset?: boolean;
 }
 
 export default function CenterUserLocation({
   mapRef,
-  userLocation,
   addOffset,
 }: CenterUserLocationProps) {
+  const { userLocation } = useUserLocationContext();
   const [pulseAnim] = useState(new Animated.Value(0));
 
   const centerToUserLocation = useCallback(() => {
@@ -45,32 +45,15 @@ export default function CenterUserLocation({
             latitude: userLocation.latitude - (addOffset ? 0.0009 : 0),
             longitude: userLocation.longitude,
           },
+          heading: 2.1,
+          pitch: 1,
+          zoom: 1,
+          altitude: 1500,
         },
         { duration: 1000 },
       );
     }
   }, [mapRef, userLocation, addOffset]);
-
-  useEffect(() => {
-    if (!userLocation) {
-      Animated.loop(
-        Animated.sequence([
-          Animated.timing(pulseAnim, {
-            toValue: 1,
-            duration: 1000,
-            useNativeDriver: true,
-          }),
-          Animated.timing(pulseAnim, {
-            toValue: 0,
-            duration: 1000,
-            useNativeDriver: true,
-          }),
-        ]),
-      ).start();
-    } else {
-      pulseAnim.setValue(0);
-    }
-  }, [userLocation, pulseAnim]);
 
   return (
     <TouchableOpacity
@@ -78,35 +61,13 @@ export default function CenterUserLocation({
       onPress={centerToUserLocation}
     >
       <View style={styles.iconContainer}>
-        {userLocation ? (
+        {!userLocation ? (
           <Ionicons name="locate" size={24} color="black" />
         ) : (
-          <>
-            <Animated.View style={[styles.icon, { opacity: pulseAnim }]}>
-              <Ionicons
-                name="navigate"
-                size={24}
-                color="rgba(0, 122, 255, 0.8)"
-              />
-            </Animated.View>
-            <Animated.View
-              style={[
-                styles.icon,
-                {
-                  opacity: pulseAnim.interpolate({
-                    inputRange: [0, 1],
-                    outputRange: [1, 0],
-                  }),
-                },
-              ]}
-            >
-              <Ionicons
-                name="navigate-outline"
-                size={24}
-                color="rgba(0, 122, 255, 0.8)"
-              />
-            </Animated.View>
-          </>
+          <AnimatedIconPair
+            filledIconName="navigate"
+            outlineIconName="navigate-outline"
+          />
         )}
       </View>
     </TouchableOpacity>

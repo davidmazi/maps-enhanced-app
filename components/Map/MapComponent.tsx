@@ -79,7 +79,9 @@ function MapComponentInner() {
   );
 
   const refreshRestaurants = useCallback(() => {
-    fetchRestaurants(latitude as string, longitude as string);
+    if (!isSpinning) {
+      fetchRestaurants(latitude as string, longitude as string);
+    }
   }, [fetchRestaurants, latitude, longitude]);
 
   useEffect(() => {

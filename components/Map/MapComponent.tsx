@@ -159,11 +159,7 @@ function MapComponentInner() {
           isSpinning={isSpinning}
           styles={styles}
         />
-        <CenterUserLocation
-          userLocation={userLocation}
-          mapRef={mapRef}
-          addOffset
-        />
+        <CenterUserLocation mapRef={mapRef} addOffset />
       </MapButtons>
     </View>
   );

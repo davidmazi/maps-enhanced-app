@@ -4,6 +4,7 @@ import { Ionicons } from "@expo/vector-icons";
 import MapView from "react-native-maps";
 
 import { useUserLocationContext } from "@/components/Index/UserLocationContext";
+import AnimatedIconPair from "./AnimatedIconPairs";
 
 const styles = StyleSheet.create({
   centerButton: {
@@ -54,62 +55,19 @@ export default function CenterUserLocation({
     }
   }, [mapRef, userLocation, addOffset]);
 
-  useEffect(() => {
-    if (!userLocation) {
-      Animated.loop(
-        Animated.sequence([
-          Animated.timing(pulseAnim, {
-            toValue: 1,
-            duration: 1000,
-            useNativeDriver: true,
-          }),
-          Animated.timing(pulseAnim, {
-            toValue: 0,
-            duration: 1000,
-            useNativeDriver: true,
-          }),
-        ]),
-      ).start();
-    } else {
-      pulseAnim.setValue(0);
-    }
-  }, [userLocation, pulseAnim]);
-
   return (
     <TouchableOpacity
       style={styles.centerButton}
       onPress={centerToUserLocation}
     >
       <View style={styles.iconContainer}>
-        {userLocation ? (
+        {!userLocation ? (
           <Ionicons name="locate" size={24} color="black" />
         ) : (
-          <>
-            <Animated.View style={[styles.icon, { opacity: pulseAnim }]}>
-              <Ionicons
-                name="navigate"
-                size={24}
-                color="rgba(0, 122, 255, 0.8)"
-              />
-            </Animated.View>
-            <Animated.View
-              style={[
-                styles.icon,
-                {
-                  opacity: pulseAnim.interpolate({
-                    inputRange: [0, 1],
-                    outputRange: [1, 0],
-                  }),
-                },
-              ]}
-            >
-              <Ionicons
-                name="navigate-outline"
-                size={24}
-                color="rgba(0, 122, 255, 0.8)"
-              />
-            </Animated.View>
-          </>
+          <AnimatedIconPair
+            filledIconName="navigate"
+            outlineIconName="navigate-outline"
+          />
         )}
       </View>
     </TouchableOpacity>

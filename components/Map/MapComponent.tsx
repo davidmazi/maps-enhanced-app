@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import { useLocalSearchParams } from "expo-router";
+import Colors from "apple-colors";
 import Loader from "../Loader";
 import RestaurantSwiper from "../Swiper/RestaurantSwiper";
 import RefreshButton from "./RefreshButton";
@@ -23,7 +24,8 @@ const styles = StyleSheet.create({
   },
   mapTypeButton: {
     width: 40,
-    backgroundColor: "rgba(255, 255, 255, 0.8)",
+    backgroundColor: Colors.iOS.Light.Grey6,
+    opacity: 0.8,
     padding: 10,
     marginBottom: 10,
     borderRadius: 5,
@@ -32,13 +34,13 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   floatingButton: {
-    backgroundColor: "rgba(255, 255, 255, 0.8)",
+    backgroundColor: Colors.iOS.Light.Grey6,
+    opacity: 0.8,
     borderRadius: 30,
     width: 40,
     height: 40,
     justifyContent: "center",
     marginBottom: 10,
-
     alignItems: "center",
   },
   disabledButton: {
@@ -49,8 +51,13 @@ const styles = StyleSheet.create({
 function MapComponentInner() {
   const { latitude, longitude } = useLocalSearchParams();
 
-  const { restaurants, currentRestaurant, fetchRestaurants, isSpinning } =
-    useRestaurantContext();
+  const {
+    restaurants,
+    setRestaurants,
+    currentRestaurant,
+    fetchRestaurants,
+    isSpinning,
+  } = useRestaurantContext();
 
   const mapRef = useRef<MapView>(null);
 
@@ -63,6 +70,13 @@ function MapComponentInner() {
         prevSettings.mapType === "standard" ? "satelliteFlyover" : "standard",
     }));
   };
+
+  useEffect(
+    () => () => {
+      setRestaurants([]);
+    },
+    [setRestaurants],
+  );
 
   const refreshRestaurants = useCallback(() => {
     fetchRestaurants(latitude as string, longitude as string);
@@ -108,6 +122,7 @@ function MapComponentInner() {
           mapType={mapSettings.mapType}
           showsBuildings={false}
           ref={mapRef}
+          loadingEnabled
           showsCompass
           showsUserLocation
         >

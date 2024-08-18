@@ -1,9 +1,13 @@
 import React from "react";
 import { View, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import Colors from "apple-colors";
+
+import StyledIconText from "./StyledIconText";
 
 interface FlameRatingProps {
   rating: number;
+  totalRatings: number | null;
   size?: number;
   activeColor?: string;
   inactiveColor?: string;
@@ -11,6 +15,7 @@ interface FlameRatingProps {
 
 const styles = StyleSheet.create({
   container: {
+    paddingBottom: 10,
     flexDirection: "row",
     alignItems: "center",
   },
@@ -23,9 +28,10 @@ const styles = StyleSheet.create({
 
 function FlameRating({
   rating,
+  totalRatings,
   size = 24,
-  activeColor = "#FF6B00",
-  inactiveColor = "#A0A0A0",
+  activeColor = Colors.iOS.Light.Orange,
+  inactiveColor = Colors.iOS.Light.Grey3,
 }: FlameRatingProps) {
   // Ensure rating is between 0 and 5
   const safeRating = Math.max(0, Math.min(5, rating));
@@ -49,7 +55,16 @@ function FlameRating({
   };
 
   return (
-    <View style={styles.container}>{[1, 2, 3, 4, 5].map(renderFlame)}</View>
+    <View style={styles.container}>
+      {[1, 2, 3, 4, 5].map(renderFlame)}
+      {totalRatings !== null && (
+        <StyledIconText
+          text={totalRatings}
+          iconName="chatbubble-ellipses-outline"
+          iconColor={activeColor}
+        />
+      )}
+    </View>
   );
 }
 

@@ -1,17 +1,16 @@
-import { Card } from "@rneui/themed";
-import React, { useEffect, useState } from "react";
-import { Alert, StyleSheet, Text, View } from "react-native";
+import React, { useEffect, useRef, useState } from "react";
+import { Alert, StyleSheet, View } from "react-native";
 import Swiper from "react-native-deck-swiper";
 import openMap from "react-native-open-maps";
 import { Restaurant, useRestaurantContext } from "../Map/RestaurantContext";
-import FlameRating from "../common/FlameRating";
+import RestaurantCard from "./RestaurantCard";
 
 export type SwipeDirection = "left" | "right";
 
 const styles = StyleSheet.create({
   container: {
     position: "absolute",
-    marginTop: "75%",
+    marginTop: "80%",
   },
 });
 
@@ -27,8 +26,9 @@ function RestaurantSwiper() {
     index: number;
     direction: SwipeDirection;
   } | null>(null);
-  // Handle Swipe
+  const swiperRef = useRef<Swiper<Restaurant>>(null);
 
+  // Handle Swipe
   useEffect(() => {
     if (swipeAction) {
       const { index, direction } = swipeAction;
@@ -100,22 +100,14 @@ function RestaurantSwiper() {
     restaurants.length > 1 && (
       <View style={styles.container}>
         <Swiper
+          ref={swiperRef}
           cards={restaurants}
           renderCard={(restaurant: Restaurant) => (
-            <Card containerStyle={{ borderRadius: 25 }}>
-              <Card.Title>{restaurant.name}</Card.Title>
-              <FlameRating rating={restaurant.rating ?? 0.5} />
-              <Card.Divider />
-              <Text>{restaurant.type}</Text>
-              <Card.Image
-                style={{ padding: 0, borderRadius: 25, marginVertical: 10 }}
-                source={{
-                  uri: restaurant.photoUrl ?? undefined,
-                }}
-              />
-              <Card.Divider />
-              <Text>{restaurant.address}</Text>
-            </Card>
+            <RestaurantCard
+              swiperRef={swiperRef}
+              restaurant={restaurant}
+              key={restaurant.name}
+            />
           )}
           verticalThreshold={Infinity}
           onSwipedLeft={onSwipedLeft}

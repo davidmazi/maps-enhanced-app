@@ -14,13 +14,16 @@ import { useRouter } from "expo-router";
 import { UserLocation } from "../Index/UserLocationContext";
 
 export type Restaurant = {
+  // TODO keep in sync with backend
   name: string;
   photoUrl: string | null;
   rating: number | null;
-  address: string;
+  totalRatings: number | null;
+  address: string | null;
   type: string;
   latitude: number;
   longitude: number;
+  openNow: boolean | null;
 };
 
 interface RestaurantContextType {

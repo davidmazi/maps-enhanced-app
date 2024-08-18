@@ -79,7 +79,9 @@ function MapComponentInner() {
   );
 
   const refreshRestaurants = useCallback(() => {
-    fetchRestaurants(latitude as string, longitude as string);
+    if (!isSpinning) {
+      fetchRestaurants(latitude as string, longitude as string);
+    }
   }, [fetchRestaurants, latitude, longitude]);
 
   useEffect(() => {
@@ -157,7 +159,11 @@ function MapComponentInner() {
           isSpinning={isSpinning}
           styles={styles}
         />
-        <CenterUserLocation mapRef={mapRef} addOffset />
+        <CenterUserLocation
+          userLocation={userLocation}
+          mapRef={mapRef}
+          addOffset
+        />
       </MapButtons>
     </View>
   );

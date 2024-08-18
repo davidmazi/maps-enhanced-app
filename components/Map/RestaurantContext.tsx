@@ -83,6 +83,10 @@ export function RestaurantProvider({ children }: RestaurantProviderProps) {
       }
 
       try {
+        console.debug(
+          "🚀\x1b[35m ~ file: RestaurantContext.tsx ~ fetchRestaurantsData ~ params\x1b[0m",
+          params,
+        );
         const response = await axios.get(`${apiUrl}/restaurants`, {
           params,
           timeout: 5000,

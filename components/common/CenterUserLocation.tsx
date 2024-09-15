@@ -1,15 +1,17 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useState } from "react";
 import { StyleSheet, TouchableOpacity, Animated, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import MapView from "react-native-maps";
+import Colors from "apple-colors";
 
-import { useUserLocationContext } from "@/components/Index/UserLocationContext";
+import { useUserLocationContext } from "@components/Index/UserLocationContext";
 import AnimatedIconPair from "./AnimatedIconPairs";
 
 const styles = StyleSheet.create({
   centerButton: {
     padding: 10,
-    backgroundColor: "rgba(255, 255, 255, 0.8)",
+    backgroundColor: Colors.iOS.Light.Grey6,
+    opacity: 0.8,
     marginBottom: 10,
     borderRadius: 25,
   },
@@ -35,7 +37,6 @@ export default function CenterUserLocation({
   addOffset,
 }: CenterUserLocationProps) {
   const { userLocation } = useUserLocationContext();
-  const [pulseAnim] = useState(new Animated.Value(0));
 
   const centerToUserLocation = useCallback(() => {
     if (mapRef.current && userLocation) {

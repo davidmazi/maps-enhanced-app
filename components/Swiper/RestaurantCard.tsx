@@ -2,7 +2,7 @@ import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { Card } from "@rneui/themed";
 import { Ionicons } from "@expo/vector-icons";
-import { Colors } from "apple-colors";
+import Colors from "apple-colors";
 import Swiper from "react-native-deck-swiper";
 import { Restaurant } from "../Map/RestaurantContext";
 import FlameRating from "../common/FlameRating";

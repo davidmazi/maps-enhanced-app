@@ -1,9 +1,9 @@
 import React from "react";
 import { Stack } from "expo-router";
-import { UserLocationProvider } from "@/components/Index/UserLocationContext";
+import { UserLocationProvider } from "@components/Index/UserLocationContext";
 
-import { ServerStatusProvider } from "@/components/common/ServerStatusContext";
-import GlobalButtons from "@/components/common/globalButtons/GlobalButtons";
+import { ServerStatusProvider } from "@components/common/ServerStatusContext";
+import GlobalButtons from "@components/common/globalButtons/GlobalButtons";
 
 export default function RootLayout() {
   return (

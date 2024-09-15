@@ -1,6 +1,7 @@
 import React from "react";
 import { StyleSheet, TouchableOpacity, Text, Alert } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import Colors from "apple-colors";
 import { useServerStatus } from "../common/ServerStatusContext";
 
 interface SearchNearPinButtonProps {
@@ -15,7 +16,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     borderRadius: 25,
     alignSelf: "center",
-    backgroundColor: "rgb(0, 122, 255)",
+    backgroundColor: Colors.iOS.Light.Blue,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",

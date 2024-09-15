@@ -2,6 +2,7 @@ import React from "react";
 import { StyleProp, StyleSheet, ViewStyle, Text } from "react-native";
 
 import { usePathname } from "expo-router";
+import Colors from "apple-colors";
 import NavigateHomeButton from "./NavigateHomeButton";
 import ServerStatus from "./ServerStatus";
 import MapButtons from "../MapButtons";
@@ -15,7 +16,8 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     justifyContent: "center",
-    backgroundColor: "rgba(255, 255, 255, 0.8)",
+    backgroundColor: Colors.iOS.Light.Grey6,
+    opacity: 0.9,
     alignItems: "center",
     borderRadius: 25,
     marginBottom: 10,

@@ -1,4 +1,4 @@
-import InitialLocationMap from "@/components/Index/InitialLocationMap";
+import InitialLocationMap from "@components/Index/InitialLocationMap";
 import React from "react";
 import { StyleSheet, View } from "react-native";
 

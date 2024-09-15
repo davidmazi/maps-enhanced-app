@@ -2,7 +2,7 @@ import React from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
-import Loader from "@/components/Loader";
+import Loader from "@components/Loader";
 
 import { useServerStatus } from "../ServerStatusContext";
 import type { GlobalButtonProps } from "./GlobalButtons";

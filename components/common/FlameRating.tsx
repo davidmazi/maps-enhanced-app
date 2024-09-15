@@ -1,16 +1,19 @@
 import React from "react";
 import { View, StyleSheet } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
+
 import Colors from "apple-colors";
 
 import StyledIconText from "./StyledIconText";
+import RepeatingIcon from "./RepeatingIcon";
 
 interface FlameRatingProps {
   rating: number;
   totalRatings: number | null;
   size?: number;
-  activeColor?: string;
-  inactiveColor?: string;
+  colors?: {
+    active: string;
+    inactive: string;
+  };
 }
 
 const styles = StyleSheet.create({
@@ -30,38 +33,28 @@ function FlameRating({
   rating,
   totalRatings,
   size = 24,
-  activeColor = Colors.iOS.Light.Orange,
-  inactiveColor = Colors.iOS.Light.Grey3,
+  colors = {
+    active: Colors.iOS.Light.Orange,
+    inactive: Colors.iOS.Light.Grey3,
+  },
 }: FlameRatingProps) {
-  // Ensure rating is between 0 and 5
-  const safeRating = Math.max(0, Math.min(5, rating));
-
-  const renderFlame = (index: number) => {
-    const filled = Math.min(Math.max(safeRating - index + 1, 0), 1);
-
-    return (
-      <View key={index} style={styles.flameContainer}>
-        <Ionicons
-          name="flame-outline"
-          size={size}
-          color={inactiveColor}
-          style={StyleSheet.absoluteFillObject}
-        />
-        <View style={{ overflow: "hidden", width: `${filled * 100}%` }}>
-          <Ionicons name="flame" size={size} color={activeColor} />
-        </View>
-      </View>
-    );
-  };
-
   return (
     <View style={styles.container}>
-      {[1, 2, 3, 4, 5].map(renderFlame)}
+      <RepeatingIcon
+        count={5}
+        value={rating}
+        size={size}
+        colors={colors}
+        icons={{
+          active: "flame",
+          inactive: "flame-outline",
+        }}
+      />
       {totalRatings !== null && (
         <StyledIconText
           text={totalRatings}
           iconName="chatbubble-ellipses-outline"
-          iconColor={activeColor}
+          iconColor={colors.active}
         />
       )}
     </View>

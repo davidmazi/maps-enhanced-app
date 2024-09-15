@@ -87,10 +87,6 @@ function LocationSearchBar({ searchCoordinates }: Props) {
     );
   };
 
-  const handleBlur = () => {
-    setIsExpanded(false);
-  };
-
   return (
     <SafeAreaView style={styles.container}>
       <TouchableOpacity onPress={handlePress} activeOpacity={0.8}>

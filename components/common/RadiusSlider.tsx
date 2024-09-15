@@ -4,10 +4,11 @@ import Slider from "@react-native-community/slider";
 
 import { Ionicons } from "@expo/vector-icons";
 import Colors from "apple-colors";
+import RepeatingIcon from "./RepeatingIcon";
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: Colors.iOS.Light.Green,
+    backgroundColor: Colors.iOS.Light.Grey6,
     opacity: 0.8,
     borderRadius: 25,
     padding: 10,
@@ -21,7 +22,7 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 0,
     borderBottomRightRadius: 20,
     borderRadius: 25,
-    backgroundColor: Colors.iOS.Light.Green,
+    backgroundColor: Colors.iOS.Light.Grey6,
     position: "absolute",
     right: 0,
     top: "150%",
@@ -46,12 +47,32 @@ function RadiusSlider({ maxRadius, setMaxRadius }: Props) {
     borderBottomRightRadius: isExpanded ? 0 : 25,
   };
 
+  function mapRadiusToValue(radius: number) {
+    // Map to 1, 2, or 3 based on simple thresholds for the max value 999
+    if (radius < 340) return 1;
+    if (radius < 670) return 2;
+    return 3;
+  }
+
   return (
     <View style={containerStyle}>
       <TouchableOpacity
         style={styles.header}
         onPress={() => setIsExpanded(!isExpanded)}
       >
+        <RepeatingIcon
+          count={3}
+          value={mapRadiusToValue(maxRadius)}
+          size={15}
+          colors={{
+            active: Colors.iOS.Light.Blue,
+            inactive: Colors.iOS.Light.Grey1,
+          }}
+          icons={{
+            active: "footsteps",
+            inactive: "footsteps-outline",
+          }}
+        />
         <Text>
           {maxRadius} m {isExpanded && <Ionicons size={10} name="chevron-up" />}
         </Text>

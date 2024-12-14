@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { View, StyleSheet, TouchableOpacity } from "react-native";
 import Slider from "@react-native-community/slider";
 
 import { Ionicons } from "@expo/vector-icons";
@@ -73,9 +73,8 @@ function RadiusSlider({ maxRadius, setMaxRadius }: Props) {
             inactive: "footsteps-outline",
           }}
         />
-        <Text>
-          {maxRadius} m {isExpanded && <Ionicons size={10} name="chevron-up" />}
-        </Text>
+        {isExpanded && <Ionicons size={10} name="chevron-up" />}
+
         {!isExpanded && <Ionicons size={10} name="chevron-down" />}
       </TouchableOpacity>
       {isExpanded && (

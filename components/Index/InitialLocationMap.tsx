@@ -95,6 +95,12 @@ function InitialLocationMap() {
         ref={mapRef}
         showsUserLocation
         loadingEnabled
+        on={
+          (region) => {
+            console.debug("🚀\x1b[35m ~ file: InitialLocationMap.tsx:100 ~ InitialLocationMap ~ region\x1b[0m", region)
+
+          }
+        }
         initialCamera={{
           center: centerCoordinates,
           heading: 2.1,
@@ -103,7 +109,7 @@ function InitialLocationMap() {
           altitude: 1500,
         }}
       />
-      <CenteredMarker />
+      <CenteredMarker mapRef={mapRef} maxRadius={maxRadius} />
       <MapButtons variant="right">
         <CenterUserLocation mapRef={mapRef} />
         <RadiusSlider maxRadius={maxRadius} setMaxRadius={setMaxRadius} />

@@ -53,7 +53,7 @@ function SearchNearPinButton({ onPress }: SearchNearPinButtonProps) {
       style={[styles.validateButton, !serverOnline && styles.disabledButton]}
       onPress={handlePress}
     >
-      <Text style={styles.buttonText}>Search Near Pin</Text>
+      <Text style={styles.buttonText}>Search</Text>
       <Ionicons name="arrow-forward-circle-outline" size={24} color="white" />
     </TouchableOpacity>
   );
